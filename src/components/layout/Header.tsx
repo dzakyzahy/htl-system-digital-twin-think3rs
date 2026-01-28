@@ -8,7 +8,7 @@ export function Header() {
             <div className="container mx-auto flex h-16 items-center justify-between px-2 lg:h-24 lg:px-4">
 
                 {/* Logos Section */}
-                <div className="flex items-center gap-2 lg:gap-6">
+                <div className="hidden items-center gap-2 lg:flex lg:gap-6">
                     <div className="relative h-[40px] w-[40px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[60px] lg:w-[60px]">
                         <Image
                             src="/assets/Logo_Undip.jpeg"
