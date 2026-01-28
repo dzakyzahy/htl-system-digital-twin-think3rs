@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏭 Hydrothermal Liquefaction (HTL) Digital Twin
 
-## Getting Started
+**A High-Fidelity Web Simulation Platform for Bio-Oil Production from Poultry Manure.**  
+*Built for LKTIN AEROSPACE 2026 by Team Think3rs.*
 
-First, run the development server:
+![Project Banner](/public/assets/Logo_ITB.png) <!-- Update this if you have a screenshot of the dashboard -->
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This Digital Twin platform simulates the **Hydrothermal Liquefaction (HTL)** process, allowing researchers and industry stakeholders to visualize, analyze, and optimize the conversion of poultry waste (chicken & cow manure) into valuable Bio-oil.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+It combines **scientific rigor** with **premium accessibility**, featuring real-time kinetic modeling, 3D visualization, and complete techno-economic analysis.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Key Features
 
-## Learn More
+### 1. 🔬 Advanced Simulation Engine
+- **Component-Contribution Model**: Calculates yields based on exact biochemical composition (Lipids, Proteins, Carbohydrates).
+- **Dynamic Kinetics**: Implements Arrhenius equation to model reaction rates ($k = A e^{-Ea/RT}$) and product distribution (Bio-oil, Gas, Char, Aqueous).
+- **Real-Time Thermodynamics**: Dynamic calculation of Higher Heating Value (HHV) and Energy Recovery Ratio (ERR).
 
-To learn more about Next.js, take a look at the following resources:
+### 2. 🧊 3D Process Visualization
+- Interactive **3D Digital Twin** of the reactor facility using React Three Fiber.
+- Visual feedback for temperature changes and processing states.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. 📊 Interactive Dashboard
+- **Product Analysis**: Real-time line charts for kinetic profiles and pie charts for yield distribution.
+- **Economic Suite**: Automatic calculation of NPV (10-year), ROI, IRR, and Payback Period based on CAPEX/OPEX inputs.
+- **Mobile Optimized**: Fully responsive interface for tablets and smartphones.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. 📉 Data Export
+- Download comprehensive simulation reports in CSV format for offline analysis.
 
-## Deploy on Vercel
+## 🛠️ Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Visualization**: 
+  - [React Three Fiber](https://docs.pmndrs.assets/react-three-fiber) (3D)
+  - [Recharts](https://recharts.org/) (2D Charts)
+- **Icons**: [Lucide React](https://lucide.dev/)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏁 Getting Started
+
+### Prerequisites
+- Node.js 18+ installed.
+
+### Installation
+
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/dzakyzahy/htl-system-digital-twin-think3rs.git
+    cd htl-system-digital-twin-think3rs
+    ```
+
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
+
+4.  Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 👥 Team Think3rs
+
+| Name | Role | Institution |
+|------|------|-------------|
+| **Syahid Ma'ashum** | Principal Investigator | UGM (Faculty of Animal Science) |
+| **M. Ilham Saripul Milah** | Process Simulation Engineer | ITB (Metallurgical Engineering) |
+| **Dzaky Zahy Rabbani** | Software & Digital Twin Architect | ITB (Oceanography) |
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+*Developed with ❤️ for a sustainable future.*
