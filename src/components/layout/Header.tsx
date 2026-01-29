@@ -1,15 +1,20 @@
+"use client";
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 export function Header() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
         <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
             <div className="container mx-auto flex h-16 items-center justify-between px-2 lg:h-24 lg:px-4">
 
                 {/* Logos Section */}
-                <div className="hidden items-center gap-2 lg:flex lg:gap-6">
-                    <div className="relative h-[40px] w-[40px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[60px] lg:w-[60px]">
+                <div className="flex items-center gap-2 lg:gap-6">
+                    <div className="relative h-[35px] w-[35px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[55px] lg:w-[55px]">
                         <Image
                             src="/assets/Logo_Undip.jpeg"
                             alt="Logo UNDIP"
@@ -17,7 +22,7 @@ export function Header() {
                             className="object-cover"
                         />
                     </div>
-                    <div className="relative h-[40px] w-[40px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[60px] lg:w-[60px]">
+                    <div className="relative h-[35px] w-[35px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[55px] lg:w-[55px]">
                         <Image
                             src="/assets/Logo_ITB.png"
                             alt="Logo ITB"
@@ -25,7 +30,7 @@ export function Header() {
                             className="object-contain p-1"
                         />
                     </div>
-                    <div className="relative h-[40px] w-[40px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[60px] lg:w-[60px]">
+                    <div className="relative h-[35px] w-[35px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[55px] lg:w-[55px]">
                         <Image
                             src="/assets/Logo_UGM.jpg"
                             alt="Logo UGM"
@@ -38,26 +43,54 @@ export function Header() {
                 {/* Center Title */}
                 <div className="flex-1 text-center">
                     <Link href="/">
-                        <h1 className="bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-3xl font-bold tracking-[0.2em] text-transparent transition-opacity hover:opacity-90 lg:text-5xl lg:tracking-[0.3em]">
+                        <h1 className="bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400 bg-clip-text text-4xl font-extrabold tracking-[0.2em] text-transparent drop-shadow-sm transition-all hover:opacity-90 lg:text-6xl lg:tracking-[0.25em]">
                             AERO
                         </h1>
                     </Link>
                 </div>
 
-                {/* Right Section */}
-                <div className="hidden items-center gap-6 md:flex">
-                    <Link href="/" className="text-sm font-medium text-gray-600 hover:text-blue-600">
-                        Simulasi
-                    </Link>
-                    <Link href="/about" className="text-sm font-medium text-gray-600 hover:text-blue-600">
-                        Metodologi
-                    </Link>
-                    <Link href="/documentation" className="text-sm font-medium text-gray-600 hover:text-blue-600">
-                        Dokumentasi
-                    </Link>
-                    <Link href="/team" className="text-sm font-medium text-gray-600 hover:text-blue-600">
-                        Tim Kami
-                    </Link>
+                {/* Right Section - Hamburger Menu */}
+                <div className="relative flex items-center">
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600 focus:outline-none"
+                    >
+                        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {isMenuOpen && (
+                        <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-gray-100 bg-white py-2 shadow-xl backdrop-blur-xl">
+                            <Link
+                                href="/"
+                                className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Simulasi
+                            </Link>
+                            <Link
+                                href="/about"
+                                className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Metodologi
+                            </Link>
+                            <Link
+                                href="/documentation"
+                                className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Dokumentasi
+                            </Link>
+                            <Link
+                                href="/team"
+                                className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Tim Kami
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </header>
