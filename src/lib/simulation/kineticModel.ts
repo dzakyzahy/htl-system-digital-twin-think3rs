@@ -39,11 +39,12 @@ export const derivatives = (state: SimulationState, k: { k1: number, k2: number,
     return { dBiomass, dBioOil, dGas, dChar };
 };
 
-feedstock: FeedstockComposition,
+export const runSimulation = (
+    feedstock: FeedstockComposition,
     temperatureC: number,
-        pressureMPa: number,
-            retentionTimeMin: number,
-                params: { Ea: number, A: number }
+    pressureMPa: number,
+    retentionTimeMin: number,
+    params: { Ea: number, A: number }
 ): { results: SimulationState[], measures: any, optimizationData: any[] } => {
     const T = temperatureC + 273.15;
     const dt = 0.5; // step size in minutes
