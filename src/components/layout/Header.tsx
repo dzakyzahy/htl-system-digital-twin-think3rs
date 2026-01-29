@@ -10,9 +10,9 @@ export function Header() {
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
-            <div className="container mx-auto flex h-16 items-center justify-between px-2 lg:h-24 lg:px-4">
+            <div className="container relative mx-auto flex h-16 items-center justify-between px-2 lg:h-24 lg:px-4">
 
-                {/* Logos Section */}
+                {/* Logos Section - Left */}
                 <div className="flex items-center gap-2 lg:gap-6">
                     <div className="relative h-[35px] w-[35px] overflow-hidden rounded-full border-2 border-slate-100 shadow-sm lg:h-[55px] lg:w-[55px]">
                         <Image
@@ -40,8 +40,8 @@ export function Header() {
                     </div>
                 </div>
 
-                {/* Center Title */}
-                <div className="flex-1 text-center">
+                {/* Center Title - Absolutely Centered */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-center">
                     <Link href="/">
                         <h1 className="bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400 bg-clip-text text-4xl font-extrabold tracking-[0.2em] text-transparent drop-shadow-sm transition-all hover:opacity-90 lg:text-6xl lg:tracking-[0.25em]">
                             AERO
