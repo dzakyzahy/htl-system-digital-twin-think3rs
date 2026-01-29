@@ -40,6 +40,12 @@ export default function Home() {
                 Metodologi
               </Link>
               <Link
+                href="/documentation"
+                className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-8 py-4 text-lg font-semibold text-gray-700 transition-all hover:bg-gray-50 sm:w-auto"
+              >
+                Dokumentasi
+              </Link>
+              <Link
                 href="/team"
                 className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-8 py-4 text-lg font-semibold text-gray-700 transition-all hover:bg-gray-50 sm:w-auto"
               >

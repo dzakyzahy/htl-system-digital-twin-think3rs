@@ -110,10 +110,47 @@ export default function Documentation() {
                         </div>
                     </section>
 
-                    {/* 3. Model Ekonomi */}
+                    {/* 3. Optimasi & Stabilitas Numerik */}
                     <section className="rounded-2xl border bg-white p-8 shadow-sm">
                         <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-gray-900">
                             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm  text-blue-600">3</span>
+                            Optimasi & Stabilitas Numerik
+                        </h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800">Adaptive Time-Stepping (RK4)</h3>
+                                <p className="text-gray-600 mb-2">
+                                    Pada suhu ekstrem (&gt; 500°C), laju reaksi menjadi sangat cepat sehingga metode integrasi numerik standar dapat menjadi tidak stabil (perhitungan meledak).
+                                    Sistem kami menerapkan algoritma <strong>Adaptive Time-Stepping</strong>:
+                                </p>
+                                <div className="rounded-lg bg-gray-900 p-4 font-mono text-cyan-400">
+                                    dt = min(0.5, 0.1 / k_global)
+                                </div>
+                                <p className="mt-2 text-sm text-gray-600">
+                                    Langkah waktu (`dt`) otomatis mengecil hingga 0.001 menit saat reaksi cepat, memastikan akurasi tinggi tanpa mengorbankan stabilitas.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800">Output Downsampling</h3>
+                                <p className="text-gray-600 mb-2">
+                                    Untuk mencegah <em>UI Lag</em> saat simulasi berjalan dengan ribuan langkah mikro (micro-steps), sistem melakukan <strong>Downsampling</strong> pada data visualisasi:
+                                </p>
+                                <ul className="mt-2 text-sm text-gray-600 list-disc pl-5">
+                                    <li>Perhitungan Internal: Presisi tinggi (~45.000 langkah).</li>
+                                    <li>Visualisasi Data: 1 titik data setiap 0.5 menit (~90 titik).</li>
+                                </ul>
+                                <p className="mt-2 text-sm text-gray-600">
+                                    Teknik ini memungkinkan simulasi berjalan mulus (60 FPS) di browser sambil mempertahankan validitas ilmiah yang ketat.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 4. Model Ekonomi */}
+                    <section className="rounded-2xl border bg-white p-8 shadow-sm">
+                        <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-gray-900">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm  text-blue-600">4</span>
                             Analisis Tekno-Ekonomi (TEA)
                         </h2>
                         <div className="space-y-6">

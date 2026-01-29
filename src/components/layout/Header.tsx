@@ -55,6 +55,9 @@ export function Header() {
                     <Link href="/documentation" className="text-sm font-medium text-gray-600 hover:text-blue-600">
                         Dokumentasi
                     </Link>
+                    <Link href="/team" className="text-sm font-medium text-gray-600 hover:text-blue-600">
+                        Tim Kami
+                    </Link>
                 </div>
             </div>
         </header>
