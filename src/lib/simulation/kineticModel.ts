@@ -47,8 +47,8 @@ export const runSimulation = (
     params: { Ea: number, A: number }
 ): { results: SimulationState[], measures: any, optimizationData: any[] } => {
     const T = temperatureC + 273.15;
-    const dt = 0.5; // step size in minutes
-    const steps = Math.ceil(retentionTimeMin / dt);
+
+
 
     // Component-Contribution Model (CCM) for HTL
     // Reference: Madsen & Glasius (2019) / Zhou et al. (2020)
@@ -61,6 +61,22 @@ export const runSimulation = (
     if (pressureMPa < 10) pressureFactor = 0.6; // Bad conversion
     else if (pressureMPa < 15) pressureFactor = 0.9;
     else if (pressureMPa > 22) pressureFactor = 1.05; // Slightly better
+
+    // Base rate constant from global Arrhenius
+    // Pressure increases reaction rate slightly due to fluid density (pre-exponential factor modification)
+    const kGlobal = calculateK(params.A * (pressureFactor), params.Ea, T);
+
+    // Dynamic Step Size (Fix for Stability at High T)
+    // RK4 stability requires k*dt < 2.7. We target k*dt ~ 0.1 for high accuracy.
+    // At 585C, k can be > 10 min^-1, requiring dt < 0.1 min.
+    let dt = 0.5; // Default for low temps
+    if (kGlobal > 1e-6) {
+        dt = Math.min(0.5, 0.1 / kGlobal);
+    }
+    // Clamp to prevent performance issues (min step ~ 0.001 min -> max ~45000 steps)
+    dt = Math.max(0.001, dt);
+
+    const steps = Math.ceil(retentionTimeMin / dt);
 
     // 1. Calculate normative yields based on dry matter composition
     const lipidYield = feedstock.lipid * 0.95 * pressureFactor;
@@ -93,9 +109,7 @@ export const runSimulation = (
 
     const predictedBioOilYield = theoreticalBioOil * tempFactor;
 
-    // Base rate constant from global Arrhenius
-    // Pressure increases reaction rate slightly due to fluid density (pre-exponential factor modification)
-    const kGlobal = calculateK(params.A * (pressureFactor), params.Ea, T);
+
 
     // 3. Determine Kinetic Ratios (k1:k2:k3) to match the predicted yield at t=inf
     // We want the steady state Bio-oil conc to approach `predictedBioOilYield / 100` (since state is 0-1)
@@ -146,6 +160,11 @@ export const runSimulation = (
     results.push({ ...state });
 
     // RK4 Implementation
+    // Optimization: Only record data points every ~0.5 minutes for the UI chart
+    // High-temp sim might have 45,000 steps; Recharts cannot handle that.
+    const recordInterval = 0.5;
+    let nextRecordTime = 0.1; // Start recording after t=0
+
     for (let i = 0; i < steps; i++) {
         const k_rates = { k1, k2, k3 };
 
@@ -192,7 +211,11 @@ export const runSimulation = (
         state.gas += (d1.dGas + 2 * d2.dGas + 2 * d3.dGas + d4.dGas) * dt / 6;
         state.char += (d1.dChar + 2 * d2.dChar + 2 * d3.dChar + d4.dChar) * dt / 6;
 
-        results.push({ ...state });
+        // Record data point if interval reached or it's the last step
+        if (state.time >= nextRecordTime || i === steps - 1) {
+            results.push({ ...state });
+            nextRecordTime += recordInterval;
+        }
     }
 
     // Calculate final measures (e.g. Yield in %)
