@@ -91,6 +91,22 @@ export default function Documentation() {
                                     <li>P &gt; 22 MPa: Factor = 1.05 (Solvasi lipid optimal)</li>
                                 </ul>
                             </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800">Normalisasi Neraca Massa (Mass Balance Closure)</h3>
+                                <p className="text-gray-600 mb-2">
+                                    Pada kondisi ekstrem (T &gt; 600°C), korelasi empiris dapat memprediksi konversi gas &gt; 100%.
+                                    Untuk mematuhi <strong>Hukum Kekekalan Massa</strong> (<em>Law of Conservation of Mass</em>), sistem menerapkan normalisasi proporsional:
+                                </p>
+                                <div className="rounded-lg bg-gray-900 p-4 font-mono text-purple-400">
+                                    IF (Oil + Gas &gt; 95%):<br />
+                                    Scale_Factor = 0.95 / (Oil + Gas)<br />
+                                    Yield_Final = Yield_Initial × Scale_Factor
+                                </div>
+                                <p className="mt-2 text-sm text-gray-600">
+                                    Metode ini valid secara ilmiah untuk menjaga rasio produk relatif (selektivitas) tetap akurat meskipun total konversi dibatasi oleh massa input fisik.
+                                </p>
+                            </div>
                         </div>
                     </section>
 

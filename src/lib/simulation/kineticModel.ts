@@ -110,15 +110,24 @@ export const runSimulation = (
     if (temperatureC > 500) targetGasRatio *= 4.0; // Gasifiction
 
     // Char is the remainder, heavily influenced by lignin (in ash/carb fraction) and low temp
+    // Char is the remainder, heavily influenced by lignin (in ash/carb fraction) and low temp
+
+    // Safety: Ensure we don't exceed 100% and create negative ratios
+    const totalReactiveEstimate = targetOilRatio + targetGasRatio;
+
+    if (totalReactiveEstimate > 0.95) {
+        // If gas + oil calculation exceeds 95% (leaving no room for char), scale them down proportionally
+        const scaleFactor = 0.95 / totalReactiveEstimate;
+        targetOilRatio *= scaleFactor;
+        targetGasRatio *= scaleFactor;
+    }
+
     let targetCharRatio = 1.0 - targetOilRatio - targetGasRatio;
 
-    // Safety normalization
-    if (targetCharRatio < 0) {
-        const excess = -targetCharRatio;
-        targetGasRatio -= excess / 2;
-        targetOilRatio -= excess / 2;
-        targetCharRatio = 0.05;
-    }
+    // Double check to prevent -0.000... precision errors
+    targetOilRatio = Math.max(0, targetOilRatio);
+    targetGasRatio = Math.max(0, targetGasRatio);
+    targetCharRatio = Math.max(0, targetCharRatio);
 
     // Assign k values
     const k1 = kGlobal * targetOilRatio;
