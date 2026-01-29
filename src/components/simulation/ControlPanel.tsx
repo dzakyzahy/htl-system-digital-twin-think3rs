@@ -12,7 +12,7 @@ import { exportSimulationData, exportEconomicReport } from "@/lib/export";
 
 export function ControlPanel() {
     const {
-        feedstockType, temperature, pressure, retentionTime, isSimulating,
+        feedstockType, temperature, pressure, retentionTime, feedstockMass, isSimulating,
         setFeedstockType, setParams, runSimulation, simulationData
     } = useSimulationStore();
 
@@ -45,7 +45,6 @@ export function ControlPanel() {
                     </button>
                 </div>
 
-                {/* Feedstock Section */}
                 <div className="space-y-4">
                     <h3 className="text-sm font-semibold uppercase tracking-wider text-blue-800">1. Feedstock</h3>
 
@@ -61,6 +60,19 @@ export function ControlPanel() {
                             ))}
                         </select>
                     </div>
+
+                    <div className="space-y-2">
+                        <div className="flex justify-between">
+                            <label className="text-sm font-medium">Production Capacity</label>
+                            <span className="text-sm font-bold text-blue-600">{feedstockMass} ton/day</span>
+                        </div>
+                        <input
+                            type="range" min="10" max="500" step="10"
+                            value={feedstockMass}
+                            onChange={(e) => setParams({ feedstockMass: Number(e.target.value) })}
+                            className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-blue-600"
+                        />
+                    </div>
                 </div>
 
                 {/* Operating Conditions */}
@@ -73,7 +85,7 @@ export function ControlPanel() {
                             <span className="text-sm font-bold text-blue-600">{temperature}°C</span>
                         </div>
                         <input
-                            type="range" min="250" max="380" step="5"
+                            type="range" min="250" max="1000" step="5"
                             value={temperature}
                             onChange={(e) => setParams({ temperature: Number(e.target.value) })}
                             className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-blue-600"
@@ -137,7 +149,7 @@ export function ControlPanel() {
                     </button>
 
                     <button
-                        onClick={() => { }}
+                        onClick={() => setParams({ temperature: 300, pressure: 18, retentionTime: 120, feedstockMass: 50 })}
                         className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
                     >
                         <RotateCcw className="h-3 w-3" /> Reset Defaults

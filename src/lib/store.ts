@@ -34,7 +34,7 @@ interface SimulationStore {
 
 export const useSimulationStore = create<SimulationStore>((set, get) => ({
     feedstockType: FEEDSTOCK_TYPES.CHICKEN,
-    feedstockMass: 10,
+    feedstockMass: 50,
     temperature: 320,
     pressure: 18,
     retentionTime: 45,
