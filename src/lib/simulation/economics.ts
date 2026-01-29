@@ -37,10 +37,19 @@ export const calculateEconomics = (input: EconomicInput): EconomicResult => {
     if (pressure > 20) capexMultiplier += 0.15; // +15% for high pressure ratings
     if (pressure > 25) capexMultiplier += 0.25;
 
-    // Temperature effect (Metallurgy constraint)
-    if (temperature > 350) capexMultiplier += 0.10; // Upgrade to 316L/310S
-    if (temperature > 400) capexMultiplier += 0.30; // Upgrade to Inconel 625 (Expensive!)
-    if (temperature > 500) capexMultiplier += 0.80; // Specialized Ceramics/Refractory
+    // Temperature effect (Metallurgy constraint) - Exponential Cost Increase
+    // Standard reactors (SS316) work up to ~350°C.
+    // Above this, we need Hastelloy (2-3x cost) or Inconel (5-10x cost).
+    if (temperature > 350) {
+        // Exponential scaling: Base cost increases significantly with T
+        const tempDiff = temperature - 350;
+        // Formula: Multiplier adds 0.1 * e^((T-350)/100)
+        // At 450C -> +0.27
+        // At 550C -> +0.73
+        // At 800C -> +9.0 (Extremely expensive ceramic/refractory)
+        const materialFactor = 0.1 * Math.exp(tempDiff / 100);
+        capexMultiplier += materialFactor;
+    }
 
     const adjustedCapex = capexBase * capexMultiplier;
 

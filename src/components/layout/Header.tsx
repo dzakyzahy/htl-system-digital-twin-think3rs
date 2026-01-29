@@ -45,10 +45,16 @@ export function Header() {
                 </div>
 
                 {/* Right Section */}
-                <div className="hidden w-[160px] justify-end md:flex">
-                    <span className="text-right text-sm font-semibold text-gray-500">
-                        Digital Twin<br />HTL Bio-Oil
-                    </span>
+                <div className="hidden items-center gap-6 md:flex">
+                    <Link href="/" className="text-sm font-medium text-gray-600 hover:text-blue-600">
+                        Simulasi
+                    </Link>
+                    <Link href="/about" className="text-sm font-medium text-gray-600 hover:text-blue-600">
+                        Metodologi
+                    </Link>
+                    <Link href="/documentation" className="text-sm font-medium text-gray-600 hover:text-blue-600">
+                        Dokumentasi
+                    </Link>
                 </div>
             </div>
         </header>
