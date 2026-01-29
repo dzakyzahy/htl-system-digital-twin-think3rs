@@ -115,6 +115,24 @@ export function Dashboard() {
                                     </ResponsiveContainer>
                                 </div>
                             </div>
+
+                            {/* Optimization Analysis (New) */}
+                            <div className="col-span-1 rounded-xl border bg-white p-6 shadow-sm lg:col-span-2">
+                                <h3 className="mb-4 font-semibold text-blue-900">Temperature Optimization Analysis (Chicken vs Cow)</h3>
+                                <div className="h-[300px] w-full">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <LineChart data={useSimulationStore.getState().optimizationData}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="temp" label={{ value: 'Temperature (°C)', position: 'insideBottom', offset: -5 }} />
+                                            <YAxis label={{ value: 'Bio-oil Yield (%)', angle: -90, position: 'insideLeft' }} />
+                                            <Tooltip />
+                                            <Legend verticalAlign="top" />
+                                            <Line type="monotone" dataKey="Chicken" stroke="#ea580c" name="Ayam (Kotoran)" strokeWidth={3} />
+                                            <Line type="monotone" dataKey="Cow" stroke="#059669" name="Sapi (Kotoran)" strokeWidth={3} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
