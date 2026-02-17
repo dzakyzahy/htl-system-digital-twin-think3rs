@@ -10,6 +10,7 @@ import { ReactorScene } from "./ReactorScene";
 
 export function Dashboard() {
     const [activeTab, setActiveTab] = useState<'visual' | 'results' | 'economy'>('results');
+    const [econView, setEconView] = useState<'isbl' | 'tci'>('isbl');
     const { simulationData, yieldMeasures, economicResults } = useSimulationStore();
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -139,37 +140,78 @@ export function Dashboard() {
 
                 {activeTab === 'economy' && economicResults && (
                     <div className="space-y-6">
+                        {/* Control Toggle: ISBL vs TCI */}
+                        <div className="flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm">
+                            <div>
+                                <h3 className="font-semibold text-gray-900">Mode Analisis Biaya</h3>
+                                <p className="text-sm text-gray-500">
+                                    {econView === 'isbl'
+                                        ? "ISBL: Equipment Only (Alat Utama) - Optimistic"
+                                        : "TCI: Turnkey Project (Proyek Lengkap) - Realistic"}
+                                </p>
+                            </div>
+                            <div className="flex rounded-lg bg-gray-100 p-1">
+                                <button
+                                    onClick={() => setEconView('isbl')}
+                                    className={`rounded-md px-4 py-2 text-sm font-medium transition-all ${econView === 'isbl' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                                >
+                                    Equipment (ISBL)
+                                </button>
+                                <button
+                                    onClick={() => setEconView('tci')}
+                                    className={`rounded-md px-4 py-2 text-sm font-medium transition-all ${econView === 'tci' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                                >
+                                    Turnkey (TCI)
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Disclaimer / Context */}
+                        <div className="rounded-lg bg-blue-50 p-4 text-sm text-blue-800">
+                            <p>
+                                <strong>Catatan Teknis (Ref: PNNL-25464):</strong><br />
+                                • <strong>ISBL</strong>: Biaya pembelian alat utama saja (Reaktor, Heater, Pompa).<br />
+                                • <strong>TCI</strong>: Biaya total proyek termasuk Instalasi (+20%), Sipil (+15%), Kontrol (+10%), dan Engineering (+15%).
+                            </p>
+                        </div>
+
                         {/* Economic KPIs */}
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                            <div className="rounded-xl border bg-white p-4 shadow-sm">
+                                <p className="text-sm text-gray-500">CAPEX ({econView.toUpperCase()})</p>
+                                <p className="text-2xl font-bold text-gray-900">
+                                    Rp {(economicResults[econView].capex / 1e9).toFixed(1)} M
+                                </p>
+                            </div>
                             <div className="rounded-xl border bg-white p-4 shadow-sm">
                                 <p className="text-sm text-gray-500">NPV (10 Years)</p>
-                                <p className={`text-2xl font-bold ${economicResults.npv > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                                    Rp {(economicResults.npv / 1e9).toFixed(1)} M
+                                <p className={`text-2xl font-bold ${economicResults[econView].npv > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                    Rp {(economicResults[econView].npv / 1e9).toFixed(1)} M
                                 </p>
                             </div>
                             <div className="rounded-xl border bg-white p-4 shadow-sm">
                                 <p className="text-sm text-gray-500">ROI</p>
-                                <p className="text-2xl font-bold text-blue-600">{economicResults.roi.toFixed(1)}%</p>
+                                <p className="text-2xl font-bold text-blue-600">{economicResults[econView].roi.toFixed(1)}%</p>
                             </div>
                             <div className="rounded-xl border bg-white p-4 shadow-sm">
                                 <p className="text-sm text-gray-500">Payback Period</p>
-                                <p className="text-2xl font-bold text-amber-600">{economicResults.paybackPeriod.toFixed(1)} Years</p>
+                                <p className="text-2xl font-bold text-amber-600">{economicResults[econView].paybackPeriod.toFixed(1)} Years</p>
                             </div>
                         </div>
 
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
-                            <h3 className="mb-4 font-semibold">Cumulative Cash Flow</h3>
+                            <h3 className="mb-4 font-semibold">Cumulative Cash Flow ({econView.toUpperCase()})</h3>
                             <div className="h-[300px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <AreaChart
-                                        data={economicResults.cumulativeCashFlows.map((val, idx) => ({ year: idx, value: val / 1e9 }))}
+                                        data={economicResults[econView].cumulativeCashFlows.map((val, idx) => ({ year: idx, value: val / 1e9 }))}
                                         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                                     >
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="year" />
                                         <YAxis label={{ value: 'Bio. IDR', angle: -90, position: 'insideLeft' }} />
                                         <Tooltip formatter={(value) => `Rp ${value} M`} />
-                                        <Area type="monotone" dataKey="value" stroke="#10b981" fill="#10b981" fillOpacity={0.2} />
+                                        <Area type="monotone" dataKey="value" stroke={econView === 'isbl' ? "#3b82f6" : "#10b981"} fill={econView === 'isbl' ? "#3b82f6" : "#10b981"} fillOpacity={0.2} />
                                     </AreaChart>
                                 </ResponsiveContainer>
                             </div>

@@ -65,9 +65,8 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
 
         // Run Economics
         // Data from Indonesian Journal of Kinetic/Economic Analysis (2024 update)
-        // CAPEX Base for 10 ton/day pilot plant ~ 45 Billion IDR
+        // CAPEX Base derived internally from PNNL-25464 reference
         const economicInput = {
-            capexBase: 45_000_000_000,
             opexBase: 8_500_000_000,
             capacityTonPerYear: feedstockMass * 300, // 300 days/year
             bioOilPrice: 13500, // Updated market price Rp 13.500/L (Diesel equivalent)

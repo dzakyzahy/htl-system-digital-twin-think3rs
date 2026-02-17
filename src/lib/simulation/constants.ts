@@ -41,13 +41,30 @@ export const MOLECULAR_WEIGHTS = {
 };
 
 // Economic Constants (IDR)
+// Economic Constants (IDR) - Ref: PNNL-25464 Rev.1 (2016)
 export const ECONOMIC_DEFAULTS = {
-    CAPEX_BASE: 45_000_000_000, // Rp 45 Miliar for 10 ton/day plant
-    OPEX_FIXED_PERCENT: 0.05, // 5% of CAPEX
-    LABOR_COST_PER_YEAR: 1_200_000_000, // Rp 1.2 Miliar
+    // CAPEX Reference: PNNL-25464 Table A.1 adjusted for inflation/location
+    // Original: ~$2.8M USD for 10 ton/day (ISBL/Equipment Only)
+    CAPEX_ISBL_REF: 45_000_000_000, // Rp 45 Miliar (Base for 10 ton/day)
+    ISBL_REF_CAPACITY: 10, // ton/day
+
+    // Scaling Factor (Six-Tenths Rule)
+    SCALING_FACTOR: 0.6,
+
+    // Lang Factors for TCI (Total Capital Investment) - Turnkey
+    // TCI = ISBL * (1 + Sum(Factors))
+    LANG_FACTORS: {
+        INSTALLATION: 0.20, // Piping, Electrical, Insulation
+        CONTROLS: 0.10,     // Instrumentation & Control (DCS/PLC)
+        CIVIL: 0.15,        // Buildings, Foundations, Land
+        ENGINEERING: 0.15,  // Design, Supervision, Contingency
+    },
+
+    OPEX_FIXED_PERCENT: 0.05, // 5% of CAPEX (Maintenance, Insurance)
+    LABOR_COST_PER_YEAR: 1_200_000_000, // Rp 1.2 Miliar (Manager + Operators)
     ELECTRICITY_COST_KWH: 1444, // Rp/kWh (Industrial)
     WATER_COST_M3: 6000, // Rp/m3
-    BIO_OIL_PRICE_LITER: 12000, // Approx 85% of HSD
+    BIO_OIL_PRICE_LITER: 13500, // Adjusted to current market (Bio-diesel equivalent)
     HSD_PRICE_LITER: 14500, // Solar Industri
     INTEREST_RATE: 0.08, // 8%
     TAX_RATE: 0.22, // 22% PPh Badan

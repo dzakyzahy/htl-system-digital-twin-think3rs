@@ -2,7 +2,7 @@
 import { ECONOMIC_DEFAULTS } from './constants';
 
 export interface EconomicInput {
-    capexBase: number; // Base CAPEX for standard conditions
+    // capexBase is removed, we calculate it dynamically
     opexBase: number;
     capacityTonPerYear: number;
     bioOilPrice: number;
@@ -15,129 +15,136 @@ export interface EconomicInput {
     pressure: number; // For CAPEX adjustment
 }
 
-export interface EconomicResult {
+export interface FinancialMetrics {
+    capex: number;
     npv: number;
     roi: number;
     paybackPeriod: number;
-    annualRevenue: number;
-    annualProfit: number;
     cashFlows: number[];
     cumulativeCashFlows: number[];
 }
 
-export const calculateEconomics = (input: EconomicInput): EconomicResult => {
-    const { capexBase, opexBase, capacityTonPerYear, bioOilPrice, years, taxRate, discountRate, bioOilYield, temperature, pressure } = input;
+export interface EconomicResult {
+    annualRevenue: number;
+    annualProfit: number;
+    annualOpex: number;
+    isbl: FinancialMetrics; // Equipment Only
+    tci: FinancialMetrics;  // Turnkey Project
+}
 
-    // 1. CAPEX Adjustment (Sophisticated Engineering Cost Model)
-    // High pressure requires thicker walls (Pressure Vessel Code). Cost ~ P^1.5
-    // High temperature requires exotic alloys (Hastelloy/Inconel) > 350C.
-    let capexMultiplier = 1.0;
+export const calculateEconomics = (input: EconomicInput): EconomicResult => {
+    const { opexBase, capacityTonPerYear, bioOilPrice, years, taxRate, discountRate, bioOilYield, temperature, pressure } = input;
+
+    // --- 1. CAPEX Calculation (PNNL-25464) ---
+
+    // Convert annual capacity to daily for scaling (assuming 300 operating days)
+    const capacityTonPerDay = capacityTonPerYear / 300;
+
+    // Six-Tenths Rule Scaling for ISBL (Inside Battery Limits)
+    // Cost_B = Cost_A * (Cap_B / Cap_A) ^ 0.6
+    const scaleRatio = capacityTonPerDay / ECONOMIC_DEFAULTS.ISBL_REF_CAPACITY;
+    const isblBaseCost = ECONOMIC_DEFAULTS.CAPEX_ISBL_REF * Math.pow(scaleRatio, ECONOMIC_DEFAULTS.SCALING_FACTOR);
+
+    // Engineering Factors (Temp/Pressure) - Appied to Equipment Cost (ISBL)
+    let engineeringMultiplier = 1.0;
 
     // Pressure effect
-    if (pressure > 20) capexMultiplier += 0.15; // +15% for high pressure ratings
-    if (pressure > 25) capexMultiplier += 0.25;
+    if (pressure > 20) engineeringMultiplier += 0.15;
+    if (pressure > 25) engineeringMultiplier += 0.25;
 
-    // Temperature effect (Metallurgy constraint) - Exponential Cost Increase
-    // Standard reactors (SS316) work up to ~350°C.
-    // Above this, we need Hastelloy (2-3x cost) or Inconel (5-10x cost).
+    // Temperature effect (Metallurgy)
     if (temperature > 350) {
-        // Exponential scaling: Base cost increases significantly with T
         const tempDiff = temperature - 350;
-        // Formula: Multiplier adds 0.1 * e^((T-350)/100)
-        // At 450C -> +0.27
-        // At 550C -> +0.73
-        // At 800C -> +9.0 (Extremely expensive ceramic/refractory)
         const materialFactor = 0.1 * Math.exp(tempDiff / 100);
-        capexMultiplier += materialFactor;
+        engineeringMultiplier += materialFactor;
     }
 
-    const adjustedCapex = capexBase * capexMultiplier;
+    const isblFinalCost = isblBaseCost * engineeringMultiplier;
 
-    // 2. OPEX Adjustment (Energy Balance)
-    // Higher T = More heating duty (Q = m*Cp*dT). Approx linear with T.
-    // Higher P = Higher pumping cost (Work = V*dP).
+    // TCI (Total Capital Investment) Calculation - Lang Factors
+    // TCI = ISBL + (ISBL * Factors)
+    const { INSTALLATION, CONTROLS, CIVIL, ENGINEERING } = ECONOMIC_DEFAULTS.LANG_FACTORS;
+    const tciFactor = 1.0 + INSTALLATION + CONTROLS + CIVIL + ENGINEERING;
+    const tciFinalCost = isblFinalCost * tciFactor;
+
+    // --- 2. OPEX & Revenue ---
+
+    // Energy Factor for OPEX
     const energyFactor = 1.0 + ((temperature - 300) / 1000) + ((pressure - 15) / 200);
-    const adjustedOpex = opexBase * energyFactor;
+    const adjustedOpex = opexBase * energyFactor; // This might need scaling too, but keeping simple for now
 
-    // 3. Revenue Calculation (Product Sales)
-    // Bio-oil Density approx 0.95 kg/L. Market sells by Mass or Volume.
-    // We assume price is per Liter.
-    // Yearly Bio-oil Mass (ton) = Feedstock (ton) * (Yield / 100)
+    // Revenue
     const bioOilMassTon = capacityTonPerYear * (bioOilYield / 100);
     const bioOilVolumeLiters = bioOilMassTon * 1000 / 0.95; // kg -> L
 
-    // Additional Credit: Bio-char (Soil amendment) ~ Rp 2000/kg
-    // We assume Char yield roughly inversely proportional to Oil (simplified)
-    const estimatedCharYield = Math.max(0, 40 - bioOilYield * 1.5); // Heuristic
+    // Char Credit
+    const estimatedCharYield = Math.max(0, 40 - bioOilYield * 1.5);
     const charRevenue = (capacityTonPerYear * (estimatedCharYield / 100) * 1000) * 2000;
 
-    // Total Revenue
     const oilRevenue = bioOilVolumeLiters * bioOilPrice;
     const annualRevenue = oilRevenue + charRevenue;
+    const grossProfitBase = annualRevenue - adjustedOpex;
 
-    // 4. Financial Metrics
-    const grossProfit = annualRevenue - adjustedOpex;
-    const depreciation = adjustedCapex / years;
-    const taxableIncome = grossProfit - depreciation;
+    // --- 3. Financial Metrics Helper ---
 
-    // Tax Shield
-    const tax = taxableIncome > 0 ? taxableIncome * taxRate : 0;
-    const netProfit = grossProfit - tax;
+    const calculateMetrics = (capex: number): FinancialMetrics => {
+        const depreciation = capex / years;
+        const taxableIncome = grossProfitBase - depreciation;
+        const tax = taxableIncome > 0 ? taxableIncome * taxRate : 0;
+        const netProfit = grossProfitBase - tax;
+        const annualCashFlow = netProfit + depreciation;
 
-    // Cash Flow = Net Profit + Depreciation
-    const annualCashFlow = netProfit + depreciation;
+        const cashFlows: number[] = [];
+        const cumulativeCashFlows: number[] = [];
 
-    const cashFlows: number[] = [];
-    const cumulativeCashFlows: number[] = [];
+        // Year 0
+        cashFlows.push(-capex);
+        cumulativeCashFlows.push(-capex);
 
-    // Year 0: Investment
-    cashFlows.push(-adjustedCapex);
-    cumulativeCashFlows.push(-adjustedCapex);
+        let npv = -capex;
 
-    for (let i = 1; i <= years; i++) {
-        cashFlows.push(annualCashFlow);
-        cumulativeCashFlows.push(cumulativeCashFlows[i - 1] + annualCashFlow);
-    }
+        for (let i = 1; i <= years; i++) {
+            cashFlows.push(annualCashFlow);
+            const currentCum = cumulativeCashFlows[i - 1] + annualCashFlow;
+            cumulativeCashFlows.push(currentCum);
 
-    // NPV Calculation
-    let npv = -adjustedCapex;
-    for (let i = 1; i <= years; i++) {
-        npv += annualCashFlow / Math.pow(1 + discountRate, i);
-    }
+            npv += annualCashFlow / Math.pow(1 + discountRate, i);
+        }
 
-    // ROI
-    const totalProfit = (annualCashFlow * years) - adjustedCapex;
-    const roi = (totalProfit / adjustedCapex) * 100;
+        const totalProfit = (annualCashFlow * years) - capex;
+        const roi = (totalProfit / capex) * 100;
 
-    // Payback Period (Simple)
-    let paybackPeriod = 0;
-    if (annualCashFlow > 0) {
-        paybackPeriod = adjustedCapex / annualCashFlow;
-    } else {
-        paybackPeriod = 999; // Never
-    }
+        let paybackPeriod = 0;
+        if (annualCashFlow > 0) {
+            paybackPeriod = capex / annualCashFlow;
+        } else {
+            paybackPeriod = 999;
+        }
+
+        return { capex, npv, roi, paybackPeriod, cashFlows, cumulativeCashFlows };
+    };
+
+    // Calculate both scenarios
+    const metricsISBL = calculateMetrics(isblFinalCost);
+    const metricsTCI = calculateMetrics(tciFinalCost);
+
+    // For annual profit display, we use TCI scenario as it's more realistic for "Net Profit" (higher depreciation usually)
+    // But here we calculated logic inside. Let's return the TCI based annual profit for the summary if needed, 
+    // or just the pre-depreciation gross profit. 
+    // Let's stick to the Net Profit derived from TCI for the general "Annual Profit" field if a single number is needed,
+    // or just return gross.
+    // Actually, `netProfit` depends on `depreciation` which depends on CAPEX. 
+    // Let's recalculate net profit for TCI specifically for the summary.
+    const depTCI = tciFinalCost / years;
+    const taxIncTCI = grossProfitBase - depTCI;
+    const annualProfitTCI = grossProfitBase - (taxIncTCI > 0 ? taxIncTCI * taxRate : 0);
 
     return {
-        npv,
-        roi,
-        paybackPeriod,
         annualRevenue,
-        annualProfit: netProfit,
-        cashFlows,
-        cumulativeCashFlows
+        annualProfit: annualProfitTCI,
+        annualOpex: adjustedOpex,
+        isbl: metricsISBL,
+        tci: metricsTCI
     };
 };
 
-export const generateSensitivityData = (baseInput: EconomicInput) => {
-    // Vary parameters by +/- 20%
-    const variations = [-0.2, -0.1, 0, 0.1, 0.2];
-
-    const results = variations.map(v => {
-        const input = { ...baseInput, bioOilPrice: baseInput.bioOilPrice * (1 + v) };
-        const res = calculateEconomics(input);
-        return { change: v * 100, npv: res.npv, var: 'Price' };
-    });
-
-    // Add more variables if needed (e.g. CAPEX)
-    return results;
-};
