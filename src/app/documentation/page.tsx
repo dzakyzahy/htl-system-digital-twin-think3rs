@@ -184,6 +184,145 @@ export default function Documentation() {
                             </div>
                         </div>
                     </section>
+
+                    {/* 5. Harga Bahan Baku */}
+                    <section className="rounded-2xl border bg-white p-8 shadow-sm">
+                        <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-gray-900">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm text-amber-600">5</span>
+                            Toggle Harga Bahan Baku (Feedstock Pricing)
+                        </h2>
+                        <div className="space-y-6">
+                            <div>
+                                <p className="text-gray-600 mb-4">
+                                    Fitur ini memungkinkan pengguna untuk menyertakan <strong>biaya pembelian bahan baku</strong> dalam kalkulasi ekonomi.
+                                    Secara default, bahan baku diasumsikan gratis (limbah). Dengan mengaktifkan toggle, biaya riil akan dikurangi dari pendapatan kotor (gross profit).
+                                </p>
+                                <h3 className="text-lg font-semibold text-gray-800">Rumus Perhitungan</h3>
+                                <div className="mt-2 rounded-lg bg-gray-900 p-4 font-mono text-amber-400">
+                                    Annual Feedstock Cost = Capacity (ton/year) × 1.000 × Harga (Rp/kg)
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-2">Harga Acuan</h3>
+                                <div className="overflow-hidden rounded-lg border">
+                                    <table className="w-full text-sm">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-4 py-3 text-left font-semibold text-gray-700">Bahan Baku</th>
+                                                <th className="px-4 py-3 text-left font-semibold text-gray-700">Harga (Rp/kg)</th>
+                                                <th className="px-4 py-3 text-left font-semibold text-gray-700">Sumber</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y">
+                                            <tr>
+                                                <td className="px-4 py-3 text-gray-700">Kotoran Ayam</td>
+                                                <td className="px-4 py-3 font-mono text-gray-900">Rp 100</td>
+                                                <td className="px-4 py-3 text-gray-500">Studi literatur (limbah murah)</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="px-4 py-3 text-gray-700">Kotoran Sapi</td>
+                                                <td className="px-4 py-3 font-mono text-gray-900">Rp 3.500</td>
+                                                <td className="px-4 py-3 text-gray-500">Harga rata-rata marketplace/pupuk</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div className="rounded-lg bg-amber-50 p-4 text-sm text-amber-800 border border-amber-200">
+                                <strong>Catatan:</strong> Toggle ini mempengaruhi kalkulasi NPV, ROI, dan Payback Period.
+                                Pengguna harus menjalankan ulang simulasi (<em>Run Simulation</em>) setelah mengubah toggle agar efek terlihat.
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 6. Analisis Lingkungan & Emisi */}
+                    <section className="rounded-2xl border bg-white p-8 shadow-sm">
+                        <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-gray-900">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-600">6</span>
+                            Analisis Jejak Karbon (Environmental / LCA)
+                        </h2>
+                        <div className="space-y-6">
+                            <div>
+                                <p className="text-gray-600 mb-4">
+                                    Tab <strong>Environmental Impact</strong> membandingkan emisi CO₂ dari penggunaan Bio-oil HTL
+                                    versus Batu Bara untuk menghasilkan jumlah energi yang setara. Analisis ini mengikuti pendekatan
+                                    <em> Life-Cycle Assessment (LCA)</em> sederhana.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800">Rumus Kalkulasi</h3>
+                                <div className="mt-2 space-y-3">
+                                    <div className="rounded-lg bg-gray-900 p-4 font-mono text-green-400 text-sm">
+                                        <p>1. Total Energi (GJ) = Produksi Bio-oil (kg/tahun) × HHV (MJ/kg) / 1.000</p>
+                                        <p className="mt-1">2. Emisi Batu Bara = Total Energi × 94,6 kg CO₂/GJ</p>
+                                        <p className="mt-1">3. Emisi Bio-oil  = Emisi Batu Bara × 0,3 (70% lebih rendah)</p>
+                                        <p className="mt-1">4. CO₂ Tersimpan  = Emisi Batu Bara − Emisi Bio-oil</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-2">Konstanta Lingkungan</h3>
+                                <div className="overflow-hidden rounded-lg border">
+                                    <table className="w-full text-sm">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-4 py-3 text-left font-semibold text-gray-700">Parameter</th>
+                                                <th className="px-4 py-3 text-left font-semibold text-gray-700">Nilai</th>
+                                                <th className="px-4 py-3 text-left font-semibold text-gray-700">Referensi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y">
+                                            <tr>
+                                                <td className="px-4 py-3 text-gray-700">Faktor Emisi Batu Bara</td>
+                                                <td className="px-4 py-3 font-mono text-gray-900">94,6 kg CO₂/GJ</td>
+                                                <td className="px-4 py-3 text-gray-500">IPCC (2006)</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="px-4 py-3 text-gray-700">Reduksi Emisi HTL</td>
+                                                <td className="px-4 py-3 font-mono text-gray-900">70% (faktor 0,3)</td>
+                                                <td className="px-4 py-3 text-gray-500">Zhang, Y., et al. (2023)</td>
+                                            </tr>
+                                            <tr>
+                                                <td className="px-4 py-3 text-gray-700">HHV Bio-oil</td>
+                                                <td className="px-4 py-3 font-mono text-gray-900">32,5 MJ/kg</td>
+                                                <td className="px-4 py-3 text-gray-500">Zhang, Y., et al. (2023) — Range 30-35</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-3">Referensi Literatur</h3>
+                                <div className="grid gap-3 md:grid-cols-2">
+                                    <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+                                        <p className="text-sm font-bold text-gray-900">IPCC (2006)</p>
+                                        <p className="text-xs text-gray-600 italic">Guidelines for National Greenhouse Gas Inventories</p>
+                                        <p className="mt-1 text-sm text-gray-700">Faktor emisi CO₂ batu bara ~94,6 kg CO₂/GJ.</p>
+                                    </div>
+                                    <div className="rounded-lg border border-green-200 bg-green-50 p-3">
+                                        <p className="text-sm font-bold text-gray-900">Zhang, Y., et al. (2023)</p>
+                                        <p className="text-xs text-gray-600 italic">Renewable Energy Journal</p>
+                                        <p className="mt-1 text-sm text-gray-700">HTL kotoran ayam: HHV 30-35 MJ/kg, emisi 60-80% lebih rendah dari batu bara (LCA).</p>
+                                    </div>
+                                    <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+                                        <p className="text-sm font-bold text-gray-900">Chen, W., et al. (2020)</p>
+                                        <p className="text-xs text-gray-600 italic">Applied Energy</p>
+                                        <p className="mt-1 text-sm text-gray-700">HTL biomassa basah lebih efisien dibanding pirolisis, jejak karbon lebih rendah.</p>
+                                    </div>
+                                    <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                                        <p className="text-sm font-bold text-gray-900">Universitas Diponegoro (2022)</p>
+                                        <p className="text-xs text-gray-600 italic">Publikasi Energi Biomassa</p>
+                                        <p className="mt-1 text-sm text-gray-700">Limbah peternakan mengurangi GRK, mendukung transisi energi Indonesia.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </main>
         </div>
