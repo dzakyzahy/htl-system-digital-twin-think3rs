@@ -11,6 +11,7 @@ interface SimulationStore {
     temperature: number; // C
     pressure: number; // MPa
     retentionTime: number; // min
+    useRealFeedstockPrice: boolean; // NEW: Toggle for feedstock pricing
 
     // Results
     isSimulating: boolean;
@@ -29,6 +30,7 @@ interface SimulationStore {
     // Actions
     setFeedstockType: (type: FeedstockType) => void;
     setParams: (params: Partial<SimulationStore>) => void;
+    toggleRealFeedstockPrice: () => void; // NEW
     runSimulation: () => Promise<void>;
 }
 
@@ -38,6 +40,7 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
     temperature: 320,
     pressure: 18,
     retentionTime: 45,
+    useRealFeedstockPrice: false, // Default: off
 
     isSimulating: false,
     simulationData: [],
@@ -47,6 +50,7 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
 
     setFeedstockType: (type) => set({ feedstockType: type }),
     setParams: (params) => set((state) => ({ ...state, ...params })),
+    toggleRealFeedstockPrice: () => set((state) => ({ useRealFeedstockPrice: !state.useRealFeedstockPrice })),
 
     runSimulation: async () => {
         set({ isSimulating: true });
@@ -76,7 +80,10 @@ export const useSimulationStore = create<SimulationStore>((set, get) => ({
             // Dynamic Simulation Outputs
             bioOilYield: kineticResults.measures.bioOilYield,
             temperature: temperature,
-            pressure: get().pressure // need to fetch current pressure
+            pressure: get().pressure, // need to fetch current pressure
+            // Feedstock Pricing
+            useRealFeedstockPrice: get().useRealFeedstockPrice,
+            feedstockType: feedstockType,
         };
         const econResults = calculateEconomics(economicInput);
 

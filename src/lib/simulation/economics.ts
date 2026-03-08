@@ -1,5 +1,5 @@
 
-import { ECONOMIC_DEFAULTS } from './constants';
+import { ECONOMIC_DEFAULTS, FEEDSTOCK_PRICE, FeedstockType } from './constants';
 
 export interface EconomicInput {
     // capexBase is removed, we calculate it dynamically
@@ -13,6 +13,9 @@ export interface EconomicInput {
     bioOilYield: number; // %
     temperature: number; // For CAPEX adjustment
     pressure: number; // For CAPEX adjustment
+    // Feedstock Pricing
+    useRealFeedstockPrice: boolean;
+    feedstockType: FeedstockType;
 }
 
 export interface FinancialMetrics {
@@ -28,12 +31,13 @@ export interface EconomicResult {
     annualRevenue: number;
     annualProfit: number;
     annualOpex: number;
+    feedstockCost: number; // NEW: Annual feedstock cost
     isbl: FinancialMetrics; // Equipment Only
     tci: FinancialMetrics;  // Turnkey Project
 }
 
 export const calculateEconomics = (input: EconomicInput): EconomicResult => {
-    const { opexBase, capacityTonPerYear, bioOilPrice, years, taxRate, discountRate, bioOilYield, temperature, pressure } = input;
+    const { opexBase, capacityTonPerYear, bioOilPrice, years, taxRate, discountRate, bioOilYield, temperature, pressure, useRealFeedstockPrice, feedstockType } = input;
 
     // --- 1. CAPEX Calculation (PNNL-25464) ---
 
@@ -83,7 +87,15 @@ export const calculateEconomics = (input: EconomicInput): EconomicResult => {
 
     const oilRevenue = bioOilVolumeLiters * bioOilPrice;
     const annualRevenue = oilRevenue + charRevenue;
-    const grossProfitBase = annualRevenue - adjustedOpex;
+
+    // Feedstock Cost (optional)
+    let feedstockCost = 0;
+    if (useRealFeedstockPrice) {
+        const pricePerKg = FEEDSTOCK_PRICE[feedstockType] || 0;
+        feedstockCost = capacityTonPerYear * 1000 * pricePerKg; // ton -> kg * Rp/kg
+    }
+
+    const grossProfitBase = annualRevenue - adjustedOpex - feedstockCost;
 
     // --- 3. Financial Metrics Helper ---
 
@@ -143,6 +155,7 @@ export const calculateEconomics = (input: EconomicInput): EconomicResult => {
         annualRevenue,
         annualProfit: annualProfitTCI,
         annualOpex: adjustedOpex,
+        feedstockCost,
         isbl: metricsISBL,
         tci: metricsTCI
     };

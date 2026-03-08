@@ -30,22 +30,24 @@ export const exportSimulationData = (data: SimulationState[]) => {
 };
 
 export const exportEconomicReport = (econ: EconomicResult) => {
+    // Use TCI (Turnkey / Realistic) for the export
+    const view = econ.tci;
+
     // 1. Metrics Section
     const metrics = [
-        { Metric: 'NPV (10 Years)', Value: econ.npv, Unit: 'IDR' },
-        { Metric: 'ROI', Value: econ.roi, Unit: '%' },
-        { Metric: 'Payback Period', Value: econ.paybackPeriod, Unit: 'Years' },
+        { Metric: 'CAPEX (TCI)', Value: view.capex, Unit: 'IDR' },
+        { Metric: 'NPV (10 Years)', Value: view.npv, Unit: 'IDR' },
+        { Metric: 'ROI', Value: view.roi, Unit: '%' },
+        { Metric: 'Payback Period', Value: view.paybackPeriod, Unit: 'Years' },
         { Metric: 'Annual Revenue', Value: econ.annualRevenue, Unit: 'IDR' },
+        { Metric: 'Feedstock Cost', Value: econ.feedstockCost, Unit: 'IDR' },
     ];
 
     // 2. Cash Flow Section
-    // Flatten approach: We will export Cash Flows as a separate structure or just rows
-    // For simplicity, we export key metrics first, or two files. 
-    // Let's combine them or just export Cash Flow yearly
-    const cashFlows = econ.cashFlows.map((cf, i) => ({
+    const cashFlows = view.cashFlows.map((cf, i) => ({
         Year: i,
         CashFlow: cf,
-        Cumulative: econ.cumulativeCashFlows[i]
+        Cumulative: view.cumulativeCashFlows[i]
     }));
 
     downloadCSV(metrics, `HTL_Economic_Metrics_${new Date().toISOString()}.csv`);

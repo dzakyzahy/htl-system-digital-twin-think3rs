@@ -69,3 +69,16 @@ export const ECONOMIC_DEFAULTS = {
     INTEREST_RATE: 0.08, // 8%
     TAX_RATE: 0.22, // 22% PPh Badan
 };
+
+// Feedstock Prices (Rp/kg) - Literature & Market Average
+export const FEEDSTOCK_PRICE: Record<FeedstockType, number> = {
+    [FEEDSTOCK_TYPES.CHICKEN]: 100,   // Rp 100/kg (Literatur: limbah murah)
+    [FEEDSTOCK_TYPES.COW]: 3500,      // Rp 3.500/kg (Harga pasar pupuk kandang)
+};
+
+// Environmental / LCA Constants
+export const ENVIRONMENTAL = {
+    COAL_EMISSION_FACTOR: 94.6,  // kg CO₂/GJ (IPCC 2006)
+    HTL_REDUCTION_FACTOR: 0.3,   // Bio-oil emits 30% of coal (70% lower)
+    BIO_OIL_HHV: 32.5,          // MJ/kg (Zhang et al., 2023: range 30-35)
+};
