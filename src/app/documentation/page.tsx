@@ -315,9 +315,9 @@ export default function Documentation() {
                                         <p className="mt-1 text-sm text-gray-700">HTL biomassa basah lebih efisien dibanding pirolisis, jejak karbon lebih rendah.</p>
                                     </div>
                                     <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
-                                        <p className="text-sm font-bold text-gray-900">Universitas Diponegoro (2022)</p>
-                                        <p className="text-xs text-gray-600 italic">Publikasi Energi Biomassa</p>
-                                        <p className="mt-1 text-sm text-gray-700">Limbah peternakan mengurangi GRK, mendukung transisi energi Indonesia.</p>
+                                        <p className="text-sm font-bold text-gray-900">Moser, L., et al. (2023)</p>
+                                        <p className="text-xs text-gray-600 italic">Sustainable Energy & Fuels</p>
+                                        <p className="mt-1 text-sm text-gray-700">Analisis Life-Cycle Assessment (LCA) membuktikan proses HTL kotoran ternak mampu memangkas emisi karbon (GWP) hingga 70-98% dibanding bahan bakar fosil.</p>
                                     </div>
                                 </div>
                             </div>

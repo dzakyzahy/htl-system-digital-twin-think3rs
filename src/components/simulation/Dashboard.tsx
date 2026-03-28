@@ -58,10 +58,10 @@ export function Dashboard() {
             color: 'border-blue-200 bg-blue-50',
         },
         {
-            id: 'undip',
-            title: 'Universitas Diponegoro (2022)',
-            source: 'Publikasi Energi Biomassa',
-            desc: 'Biomassa dari limbah peternakan dapat mengurangi efek gas rumah kaca dan mendukung transisi energi di Indonesia.',
+            id: 'moser',
+            title: 'Moser, L., et al. (2023)',
+            source: 'Sustainable Energy & Fuels',
+            desc: 'Analisis Life-Cycle Assessment (LCA) membuktikan proses HTL kotoran ternak mampu memangkas emisi karbon (GWP) hingga 70-98% dibanding bahan bakar fosil.',
             color: 'border-amber-200 bg-amber-50',
         },
     ];
