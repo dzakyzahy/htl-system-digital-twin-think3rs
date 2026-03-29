@@ -1,10 +1,9 @@
 # 🏭 Hydrothermal Liquefaction (HTL) Digital Twin
 
-**A High-Fidelity Web Simulation Platform for Bio-Oil Production from Poultry and BovineManure.**  
+**A High-Fidelity Web Simulation Platform for Bio-Oil Production from Poultry and Bovine Manure.**  
 *Built for LKTIN AEROSPACE 2026 by Team Think3rs.*
 
-![Project Banner](/public/assets/Logo_ITB.png)
-![Project Banner](/public/assets/Logo_UGM.png)
+![Project Banner](/public/assets/Logo_ITB.png) (/public/assets/Logo_UGM.png)
 
 ## 🚀 Overview
 
