@@ -1,72 +1,60 @@
 # 🏭 Hydrothermal Liquefaction (HTL) Digital Twin
 
-**A High-Fidelity Web Simulation Platform for Bio-Oil Production from Poultry Manure.**  
+**A High-Fidelity Web Simulation Platform for Bio-Oil Production from Poultry and BovineManure.**  
 *Built for LKTIN AEROSPACE 2026 by Team Think3rs.*
 
-![Project Banner](/public/assets/Logo_ITB.png) <!-- Update this if you have a screenshot of the dashboard -->
+![Project Banner](/public/assets/Logo_ITB.png)
+![Project Banner](/public/assets/Logo_UGM.png)
 
 ## 🚀 Overview
 
-This Digital Twin platform simulates the **Hydrothermal Liquefaction (HTL)** process, allowing researchers and industry stakeholders to visualize, analyze, and optimize the conversion of poultry waste (chicken & cow manure) into valuable Bio-oil.
-
-It combines **scientific rigor** with **premium accessibility**, featuring real-time kinetic modeling, 3D visualization, and complete techno-economic analysis.
+This Digital Twin platform simulates the **Hydrothermal Liquefaction (HTL)** process, allowing researchers and industry stakeholders to visualize, analyze, and optimize the conversion of poultry waste into valuable Bio-oil. It features real-time kinetic modeling using the **Runge-Kutta 4th Order (RK4)** method, 3D visualization, and comprehensive techno-economic and environmental analysis.
 
 ## ✨ Key Features
 
 ### 1. 🔬 Advanced Simulation Engine
-- **Component-Contribution Model**: Calculates yields based on exact biochemical composition (Lipids, Proteins, Carbohydrates).
-- **Dynamic Kinetics**: Implements Arrhenius equation to model reaction rates ($k = A e^{-Ea/RT}$) and product distribution (Bio-oil, Gas, Char, Aqueous).
-- **Real-Time Thermodynamics**: Dynamic calculation of Higher Heating Value (HHV) and Energy Recovery Ratio (ERR).
+- **RK4 Numerical Solver**: High-precision resolution of reaction rate differential equations.
+- **Component-Contribution Model**: Calculates yields based on Lipids, Proteins, and Carbohydrates.
+- **Dynamic Kinetics**: Implements the Arrhenius equation ($k = A e^{-Ea/RT}$) for product distribution.
+- **Pressure Correction**: Accounts for solvent density effects (Sub-critical vs. Super-critical).
+- **Mass Balance Normalization**: Ensures 100% mass closure for scientific validity.
 
 ### 2. 🧊 3D Process Visualization
-- Interactive **3D Digital Twin** of the reactor facility using React Three Fiber.
-- Visual feedback for temperature changes and processing states.
+- Interactive **3D Digital Twin** of the reactor using React Three Fiber.
+- Real-time visual feedback for temperature changes and processing states.
 
 ### 3. 📊 Interactive Dashboard
-- **Product Analysis**: Real-time line charts for kinetic profiles and pie charts for yield distribution.
-- **Economic Suite**: Automatic calculation of NPV (10-year), ROI, IRR, and Payback Period based on CAPEX/OPEX inputs.
-- **Mobile Optimized**: Fully responsive interface for tablets and smartphones.
+- **Product Analysis**: Real-time charts for kinetic profiles, yield distribution, and temperature optimization.
+- **Economic Suite (TEA)**: Automatic calculation of **NPV (10-year)**, **ROI**, **IRR**, and **Payback Period**.
+- **Mode Analisis Biaya**: Switch between **ISBL** (Equipment Only) and **TCI** (Turnkey Project) based on PNNL-25464.
+- **Feedstock Pricing Toggle**: Option to include raw material costs (Rp/kg) in the economic model.
+- **🌱 Environmental Impact (LCA)**: CO₂ emission comparison vs. Coal, following IPCC (2006) and Moser et al. (2023) standards.
 
-### 4. 📉 Data Export
-- Download comprehensive simulation reports in CSV format for offline analysis.
+### 4. 📉 Data & Documentation
+- **CSV Export**: Download simulation reports for offline analysis.
+- **In-App Documentation**: Detailed explanation of the mathematical models and logic.
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
-- **Visualization**: 
-  - [React Three Fiber](https://docs.pmndrs.assets/react-three-fiber) (3D)
-  - [Recharts](https://recharts.org/) (2D Charts)
-- **Icons**: [Lucide React](https://lucide.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Visuals**: [React Three Fiber](https://docs.pmndrs.assets/react-three-fiber) & [Recharts](https://recharts.org/)
+- **State**: [Zustand](https://github.com/pmndrs/zustand)
+- **UI**: [Framer Motion](https://www.framer.com/motion/) & [Lucide React](https://lucide.dev/)
 
 ## 🏁 Getting Started
 
-### Prerequisites
-- Node.js 18+ installed.
-
-### Installation
-
-1.  **Clone the repository**:
+1.  **Clone & Install**:
     ```bash
     git clone https://github.com/dzakyzahy/htl-system-digital-twin-think3rs.git
-    cd htl-system-digital-twin-think3rs
-    ```
-
-2.  **Install dependencies**:
-    ```bash
     npm install
-    # or
-    yarn install
     ```
-
-3.  **Run the development server**:
+2.  **Run Development**:
     ```bash
     npm run dev
     ```
-
-4.  Open [http://localhost:3000](http://localhost:3000) in your browser.
+3.  Open [http://localhost:3000](http://localhost:3000).
 
 ## 👥 Team Think3rs
 
@@ -81,4 +69,3 @@ It combines **scientific rigor** with **premium accessibility**, featuring real-
 This project is licensed under the **MIT License**.
 
 ---
-*Developed with ❤️ for a sustainable future.*
