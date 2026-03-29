@@ -311,7 +311,7 @@ export default function Documentation() {
                                     </div>
                                     <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
                                         <p className="text-sm font-bold text-gray-900">Chen, W., et al. (2020)</p>
-                                        <p className="text-xs text-gray-600 italic">Applied Energy</p>
+                                        <p className="text-xs text-gray-600 italic">Energy (Elsevier)</p>
                                         <p className="mt-1 text-sm text-gray-700">HTL biomassa basah lebih efisien dibanding pirolisis, jejak karbon lebih rendah.</p>
                                     </div>
                                     <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">

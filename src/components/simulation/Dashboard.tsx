@@ -53,7 +53,7 @@ export function Dashboard() {
         {
             id: 'chen',
             title: 'Chen, W., et al. (2020)',
-            source: 'Applied Energy',
+            source: 'Energy (Elsevier)',
             desc: 'HTL biomassa basah lebih efisien dibanding pirolisis karena menghilangkan proses pengeringan yang boros energi, menghasilkan jejak karbon lebih rendah.',
             color: 'border-blue-200 bg-blue-50',
         },
