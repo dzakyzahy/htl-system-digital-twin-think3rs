@@ -284,12 +284,12 @@ export default function Documentation() {
                                             <tr>
                                                 <td className="px-4 py-3 text-gray-700">Reduksi Emisi HTL</td>
                                                 <td className="px-4 py-3 font-mono text-gray-900">70% (faktor 0,3)</td>
-                                                <td className="px-4 py-3 text-gray-500">Zhang, Y., et al. (2023)</td>
+                                                <td className="px-4 py-3 text-gray-500">Moser et al. (2023)</td>
                                             </tr>
                                             <tr>
                                                 <td className="px-4 py-3 text-gray-700">HHV Bio-oil</td>
                                                 <td className="px-4 py-3 font-mono text-gray-900">32,5 MJ/kg</td>
-                                                <td className="px-4 py-3 text-gray-500">Zhang, Y., et al. (2023) — Range 30-35</td>
+                                                <td className="px-4 py-3 text-gray-500">Zhang, Y., et al. (2023) - Range 30-35</td>
                                             </tr>
                                         </tbody>
                                     </table>
